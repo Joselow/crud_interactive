@@ -2,10 +2,11 @@ import { User } from "../interfaces";
 
 interface Props {
     users: User[],
-    paintRows: boolean
+    paintRows: boolean,
+    deleteUser: (uuid: string) => void
 }
 
-export function UserList ({ users, paintRows }: Props) {
+export function UserList ({ users, paintRows, deleteUser }: Props) {
 
 
     return <>
@@ -41,7 +42,7 @@ export function UserList ({ users, paintRows }: Props) {
                                     {user.location.country }
                                 </td>
                                 <td>                      
-                                    <button>Eliminar</button>              
+                                    <button onClick={() => deleteUser(user.login.uuid)}>Eliminar</button>              
                                 </td>
                             </tr>
                         )
