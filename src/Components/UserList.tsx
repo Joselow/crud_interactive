@@ -25,13 +25,13 @@ export function UserList ({ users, paintRows, deleteUser, sortBy }: Props) {
             </thead>
             <tbody>
                 {
-                    users.map((user, index) =>{
+                    users.map((user, index) => {
                         const backgroundRow = index % 2 == 0 ? '#333' : '#666'
                         const color = paintRows ? backgroundRow : 'transparent'
                         return (
                             <tr key={user.login.uuid}
                                 style={{ backgroundColor: color} }
-                            >
+                            > 
                                 <td>
                                     <img src={user.picture.thumbnail} alt="img" />
                                 </td>

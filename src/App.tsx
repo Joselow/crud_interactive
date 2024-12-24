@@ -5,15 +5,15 @@ import { User } from './interfaces'
 import { UserList } from './Components/UserList'
 import type { SortByOptions } from './interfaces/sortBy'
 import { SORT_BY } from './constants/sortBy'
-
-
+import { useUsers } from './hooks/useUsers'
 
 function App() {
-  const [users, setUsers] = useState<User[]>([])
+
+  const { users, fecthUsers, loading, error, originalUsers, setUsers } = useUsers()
+
   const [paintRows, setPaintRows] = useState(false)
   const [sortBY, setSortBy] = useState<SortByOptions>(null)
   const [searchCountry, setSearchedCountry] = useState('')
-  const originalUsers = useRef<User[]>([])
 
   const togglePaintRows = () => {
     setPaintRows(!paintRows)
@@ -37,12 +37,7 @@ function App() {
   }
 
   useEffect(() => {
-    fetch('https://randomuser.me/api?results=100')
-    .then((res) => res.json())
-    .then(res => {
-      setUsers(res.results)
-      originalUsers.current = res.results
-    })
+    fecthUsers()
   }, [])
 
 
@@ -80,10 +75,16 @@ function App() {
   // const sortedUsers = 
 
 
-  console.log('render');
+  console.log('RE render');
   return (
     <>
       INTERACTIVE CRUD 
+      <div>
+        { error }
+      </div>
+      <div>
+        { loading && 'LOADING...' }
+      </div>
      <header style={{ margin: "20px 0px" }}>
         <button onClick={togglePaintRows}>Colorear Filas</button>
         <button onClick={() => selectSortBy(SORT_BY.country)}>Ordenar por pais</button>
