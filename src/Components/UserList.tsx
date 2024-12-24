@@ -1,12 +1,15 @@
+import { SORT_BY } from "../constants/sortBy";
 import { User } from "../interfaces";
+import { SortByOptions } from "../interfaces/sortBy";
 
 interface Props {
     users: User[],
     paintRows: boolean,
-    deleteUser: (uuid: string) => void
+    deleteUser: (uuid: string) => void,
+    sortBy: (sortOption: SortByOptions) => void
 }
 
-export function UserList ({ users, paintRows, deleteUser }: Props) {
+export function UserList ({ users, paintRows, deleteUser, sortBy }: Props) {
 
 
     return <>
@@ -14,9 +17,9 @@ export function UserList ({ users, paintRows, deleteUser }: Props) {
             <thead>
                 <tr>
                     <th>Foto</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Pais</th>
+                    <th onClick={() => sortBy(SORT_BY.name)}>Nombre</th>
+                    <th onClick={() => sortBy(SORT_BY.lastname)}>Apellido</th>
+                    <th onClick={() => sortBy(SORT_BY.country)}>Pais</th>
                     <th>Acciones</th>
                 </tr>
             </thead>

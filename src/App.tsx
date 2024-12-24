@@ -3,13 +3,15 @@ import './App.css'
 import { User } from './interfaces'
 
 import { UserList } from './Components/UserList'
+import type { SortByOptions } from './interfaces/sortBy'
+import { SORT_BY } from './constants/sortBy'
 
 
 
 function App() {
   const [users, setUsers] = useState<User[]>([])
   const [paintRows, setPaintRows] = useState(false)
-  const [sortByCountry, setSortByCountry] = useState(false)
+  const [sortBY, setSortBy] = useState<SortByOptions>(null)
   const [searchCountry, setSearchedCountry] = useState('')
   const originalUsers = useRef<User[]>([])
 
@@ -17,9 +19,14 @@ function App() {
     setPaintRows(!paintRows)
   }
 
-  const toggleSortByCountry = () => {
-    setSortByCountry(!sortByCountry)
+  const selectSortBy = (newsortBy: SortByOptions) => {
+    if (sortBY) {
+      setSortBy(null)
+    } else {
+      setSortBy(newsortBy)
+    }
   }
+
   const restoreUsers = () => {
     setUsers(originalUsers.current)
   }
@@ -39,6 +46,7 @@ function App() {
   }, [])
 
 
+
   const filteredUsers = useMemo(() => {
     console.log('filtered');
 
@@ -49,17 +57,27 @@ function App() {
 
   const sortedUsers = useMemo(() => {
     console.log('sorted');
+    if (!sortBY) return filteredUsers
     
-    return sortByCountry 
-      ? filteredUsers.toSorted((a, b) =>a.location.country.localeCompare(b.location.country))
+    const sortDic = {
+      [SORT_BY.country]: (a: User, b: User) => a.location.country.localeCompare(b.location.country),
+      [SORT_BY.lastname]: (a: User, b: User) => a.name.last.localeCompare(b.name.last),
+      [SORT_BY.name]: (a: User, b: User) => a.name.first.localeCompare(b.name.first),
+    }
+    console.log('DEBE ordenar wn');
+    
+
+    return sortBY 
+      ? filteredUsers.toSorted(sortDic[sortBY])
       : filteredUsers
-  }, [filteredUsers, sortByCountry]) 
+  }, [filteredUsers, sortBY]) 
 
   // const filteredUsers = searchCountry.length > 0 
   //       ?  users.filter(u => u.location.country.toLowerCase().includes(searchCountry.toLowerCase()))
   //       : users
 
   // const sortedUsers = 
+
 
   console.log('render');
 
@@ -69,17 +87,21 @@ function App() {
      Prueba 
      <header>
         <button onClick={togglePaintRows}>Colorear Filas</button>
-        <button onClick={toggleSortByCountry}>Ordenar por pais</button>
+        <button onClick={() => selectSortBy(SORT_BY.country)}>Ordenar por pais</button>
         <button onClick={restoreUsers}>Restaurar datos</button>
         <input placeholder='Filtra por pais' type="text" 
           onChange={(e) => setSearchedCountry(e.target.value)}
         />
      </header>
      <main>
+      {
+        sortBY
+      }
       <UserList 
         users={sortedUsers}
         paintRows={paintRows}
         deleteUser={handleDelete}
+        sortBy={selectSortBy}
         />
      </main>
     </>
