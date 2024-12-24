@@ -49,9 +49,10 @@ function App() {
 
   const filteredUsers = useMemo(() => {
     console.log('filtered');
+    const searchValue = searchCountry.trim()
 
-    return searchCountry.length > 0 
-    ?  users.filter(u => u.location.country.toLowerCase().includes(searchCountry.toLowerCase()))
+    return searchValue.length > 0 
+    ?  users.filter(u => u.location.country.toLowerCase().includes(searchValue.toLowerCase()))
     : users
   }, [users, searchCountry])
 
@@ -64,8 +65,8 @@ function App() {
       [SORT_BY.lastname]: (a: User, b: User) => a.name.last.localeCompare(b.name.last),
       [SORT_BY.name]: (a: User, b: User) => a.name.first.localeCompare(b.name.first),
     }
-    console.log('DEBE ordenar wn');
-    
+
+    console.log('DEBE ordenar wn');    
 
     return sortBY 
       ? filteredUsers.toSorted(sortDic[sortBY])
@@ -80,16 +81,16 @@ function App() {
 
 
   console.log('render');
-
-
   return (
     <>
-     Prueba 
-     <header>
+      INTERACTIVE CRUD 
+     <header style={{ margin: "20px 0px" }}>
         <button onClick={togglePaintRows}>Colorear Filas</button>
         <button onClick={() => selectSortBy(SORT_BY.country)}>Ordenar por pais</button>
         <button onClick={restoreUsers}>Restaurar datos</button>
+        <br />
         <input placeholder='Filtra por pais' type="text" 
+          style={{ margin: "10px 0px" }}
           onChange={(e) => setSearchedCountry(e.target.value)}
         />
      </header>
