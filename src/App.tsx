@@ -3,6 +3,8 @@ import './App.css'
 import { User } from './interfaces'
 
 import { UserList } from './Components/UserList'
+import { FilterUsers } from './Components/FilterUsers'
+
 import type { SortByOptions } from './interfaces/sortBy'
 import { SORT_BY } from './constants/sortBy'
 import { useUsers } from './hooks/useUsers'
@@ -86,9 +88,12 @@ function App() {
         { loading && 'LOADING...' }
       </div>
      <header style={{ margin: "20px 0px" }}>
-        <button onClick={togglePaintRows}>Colorear Filas</button>
-        <button onClick={() => selectSortBy(SORT_BY.country)}>Ordenar por pais</button>
-        <button onClick={restoreUsers}>Restaurar datos</button>
+
+        <FilterUsers
+          togglePaintRows={togglePaintRows}
+          selectSortBy={selectSortBy}
+          restoreUsers={restoreUsers}
+        />
         <br />
         <input placeholder='Filtra por pais' type="text" 
           style={{ margin: "10px 0px" }}
