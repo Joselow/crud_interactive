@@ -11,7 +11,6 @@ interface Props {
 
 export function UserList ({ users, paintRows, deleteUser, sortBy }: Props) {
 
-
     return <>
         <table>
             <thead>

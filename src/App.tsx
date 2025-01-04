@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query'
+
 import { useState } from 'react'
 import './App.css'
 import { UserList } from './Components/UserList'
@@ -7,9 +9,12 @@ import type { SortByOptions } from './interfaces/sortBy'
 import { useUsers } from './hooks/useUsers'
 import { useFilterUsers } from './hooks/useFilter'
 import { useOrderUsers } from './hooks/useOrder'
+import { fetchUsersApi } from './services/fetchUsers'
 
 function App() {
-  const { users, loading, error, originalUsers, setUsers } = useUsers()
+  const { users, loading, error, originalUsers, setUsers, setCurrentPage, currentPage } = useUsers()
+  // const info = useQuery({ queryKey: ['users'], queryFn: () => fetchUsersApi() })
+
 
   const [paintRows, setPaintRows] = useState(false)
   const [sortBy, setSortBy] = useState<SortByOptions>(null)
@@ -38,17 +43,13 @@ function App() {
 
   const filteredUsers = useFilterUsers({ users, searchValue: searchCountry })
   const sortedUsers =  useOrderUsers({ users: filteredUsers, sortBy })
-
-  console.log('RE render');
   return (
     <>
       INTERACTIVE CRUD 
       <div>
         { error }
       </div>
-      <div>
-        { loading && 'LOADING...' }
-      </div>
+     
      <header style={{ margin: "20px 0px" }}>
 
         <FilterUsers
@@ -66,12 +67,27 @@ function App() {
       {
         sortBy
       }
-      <UserList 
-        users={sortedUsers}
-        paintRows={paintRows}
-        deleteUser={handleDelete}
-        sortBy={selectSortBy}
-      />
+       <div>
+        { loading && 'LOADING...' }
+      </div>
+
+      {
+        users.length && 
+          <UserList 
+          users={sortedUsers}
+          paintRows={paintRows}
+          deleteUser={handleDelete}
+          sortBy={selectSortBy}
+        />
+      }
+
+      {
+        !loading && !error &&
+          <button onClick={() => setCurrentPage(currentPage + 1)}>
+            Cargar más
+          </button>
+      }
+      
      </main>
     </>
   )
